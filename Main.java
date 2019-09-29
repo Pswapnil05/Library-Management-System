@@ -20,7 +20,9 @@ public class Main {
             System.out.println("Add new Book");
             System.out.println("==============================================");
             Book newBook = new Book(); // // add new book through Book constructor
-            Library.getInstance().addBook(newBook); // call fucntion from Library
+            System.out.println("Enter quantity of new book");
+            Integer quantity = sc.nextInt();
+            Library.getInstance().addBook(newBook,quantity); // call fucntion from Library
             DisplayLibrary.displayAdd(); // display to continue or exit
             choice = sc.nextInt();
           }
@@ -103,6 +105,7 @@ public class Main {
             }
             // function call from library to display book issued to user
             values.forEach(integer -> Library.getInstance().issuedBooks(integer));
+            System.out.println("press 1 to continue to view books issued to user or");
             System.out.println("press 0 to exit");
             choice = sc.nextInt();
           }

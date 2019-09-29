@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// singleton class
+// singleton class with all library functions and library database
 public class Library {
   private static Library lib_instance = null;
 
@@ -41,11 +41,11 @@ public class Library {
 
   // map collection of users with list of issued books
   static Map<String, List<Integer>> userlist = new HashMap<String, List<Integer>>();
+  // list collection of books issued to users
   static List<Integer> akashlist = new ArrayList<Integer>();
   static List<Integer> pankajlist = new ArrayList<Integer>();
   static List<Integer> sachinlist = new ArrayList<Integer>();
   static List<Integer> rohitlist = new ArrayList<Integer>();
-
 
   {
     // books issued to users
@@ -54,16 +54,17 @@ public class Library {
     sachinlist.add(3);
     rohitlist.add(4);
 
-    // map of users as key and booklist as values
+    // add users as key and booklist as values in userlist map
     userlist.put("akash", akashlist);
     userlist.put("pankaj", pankajlist);
     userlist.put("sachin", sachinlist);
     userlist.put("rohit", rohitlist);
   }
 
-  // map of ISBN of books as key and quantity of book as value
+  // map collection of ISBN of books and book quantity
   static Map<Integer, Integer> bookQty = new HashMap<Integer, Integer>();
 
+  // add ISBN of books as key and quantity of book as value
   {
     bookQty.put(1, 5);
     bookQty.put(2, 4);
@@ -78,7 +79,7 @@ public class Library {
     bookQty.put(11, 4);
   }
 
-  // to check whether book is already added or not
+  // function to check whether book is already added or not
   public int compareBookISBN(Book newBook) {
     int x = 0;
     for (Book book : Library.getInstance().books) {
@@ -88,35 +89,44 @@ public class Library {
     return 0;
   }
 
-  // add new book if book dosent exist in library
-  public void addBook(Book newBook) {
+  // function to add new book in library if new book does'nt exist
+  public void addBook(Book newBook, Integer quantity) {
+    // function call
     if (compareBookISBN(newBook) == 1) System.out.println("Book already exists");
     else {
       books.add(newBook);
+      bookQty.put(newBook.getISBN(),quantity);
       System.out.println("New Book Added");
     }
   }
-  // to delete book
+  // function to delete book by ISBN number from library
   public void deleteBook(int delete) {
     books.removeIf(book -> (book.getISBN().equals(delete)));
     System.out.println("Book with ISBN number " + delete + " has been deleted");
     System.out.println("press 0 to exit");
   }
 
+  // function to search book by title
   public void searchTitle(String search) {
     books.forEach(book -> {
       if (book.getTitle().equalsIgnoreCase(search)) System.out.println(book);
     });
+    System.out.println("===============================================");
+    System.out.println("press 1 to continue to search book by title or");
     System.out.println("press 0 to exit");
   }
 
+  // function to search book by author
   public void searchAuthor(String search) {
     books.forEach(book -> {
       if (book.getAuthor().equalsIgnoreCase(search)) System.out.println(book);
     });
+    System.out.println("===============================================");
+    System.out.println("press 1 to continue to search book by author or");
     System.out.println("press 0 to exit");
   }
 
+  // function to view books by category
   public void viewBooks(int category) {
     System.out.println("==========================================================");
     books.forEach(book -> {
@@ -124,32 +134,41 @@ public class Library {
         System.out.println(book);
     });
     System.out.println("==========================================================");
+    System.out.println("press 1 to continue to view books by category or");
     System.out.println("press 0 to exit");
   }
 
+  // function to issue book to user by ISBN if book is available and not been issued earlier
   public void issueBook(int isbn, String username) {
+    // to check book availibility
     if (Library.bookQty.get(isbn) != 0) {
       for (Map.Entry<String, List<Integer>> entry : Library.userlist.entrySet()) {
         if (entry.getKey().equalsIgnoreCase(username)) {
+          // to check whether book is already issued to user
           if (entry.getValue().contains(isbn)) {
             System.out.println("Book with ISBN " + isbn + " is already issued to " + username);
           } else {
             entry.getValue().add(isbn);
             System.out.println("Book with ISBN " + isbn + " issued to " + username);
+            // function call to update book quantity after issuing book
             updateQuantity(isbn);
           }
         }
       }
     } else System.out.println("Book with ISBN " + isbn + " is not available");
+    System.out.println("==========================================================");
+    System.out.println("press 1 to continue to issue book to user or");
     System.out.println("Press 0 to exit");
   }
 
+  // function to update book quantity after issuing book to user
   public void updateQuantity(Integer isbn) {
     Integer value = Library.bookQty.get(isbn);
     value--;
     bookQty.put(isbn, value);
   }
 
+  // function to view list of users
   public void viewUser() {
     System.out.println("username:");
     for (Map.Entry<String, List<Integer>> entry : userlist.entrySet()) {
@@ -158,12 +177,14 @@ public class Library {
     }
   }
 
+  // function to view list of books issued to users
   public void issuedBooks(Integer isbn) {
     books.forEach(book -> {
       if (book.getISBN().equals(isbn)) System.out.println(book);
     });
   }
 
+  // function to view list of books with available quantity by ISBN number
   public void viewBookQuantity(int isbn) {
     books.forEach(book -> {
       if (book.getISBN().equals(isbn))

@@ -1,10 +1,10 @@
 package model.library;
 
 import java.util.Scanner;
-
+// Book entity
 public class Book {
 
-
+  // book attributes
   private final Integer ISBN;
   private String title;
   private String author;
@@ -37,7 +37,7 @@ public class Book {
     this.category = category;
   }
 
-  // getter & setter
+  // getter of private attributes of book
   public Integer getISBN() {
     return ISBN;
   }
@@ -55,8 +55,8 @@ public class Book {
   }
 
   @Override
-  public String toString() {
-    return "Book{" +
+  public String toString() {    // overridden toString mehtod to view book
+    return "Book={" +
         "ISBN=" + ISBN +
         ", title='" + title + '\'' +
         ", author='" + author + '\'' +
